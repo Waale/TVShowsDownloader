@@ -1,0 +1,28 @@
+@charset "UTF-8";
+.tvsm-row {
+	margin-left: 0;
+	margin-right: 0;
+}
+
+.tvsm-card {
+	border-radius: 0;
+}
+
+.tvsm-card img {
+	padding-top: 15px;
+}
+
+.tvsm-card .card-body {
+	padding-left: 0;
+	padding-right: 0;
+}
+
+.tvsm-card .btn {
+	width: 100%;
+}
+
+.ellipsis {
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+}
