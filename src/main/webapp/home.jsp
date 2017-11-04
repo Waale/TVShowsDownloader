@@ -9,17 +9,24 @@
 <link rel="stylesheet" href="styles/home.css"/>
 </head>
 <body>
-	<div class="row tvsm-row">
-		<c:forEach items="${simplifiedWatchlist}" var="show" varStatus="status">
-			<div class="card col-sm-2 tvsm-card">
-				<img class="card-img-top" src="${show.poster}" alt="TV Show Poser">
-				<div class="card-body">
-				  <p class="card-title ellipsis">${show.name}</p>
-				  <p class="card-text"></p>
-				  <a href="#" class="btn btn-primary ellipsis">Show episodes</a>
-				</div>
+	<div class="row">
+		<div id="watchlist" class="col-sm-12">
+			<div class="row tvsm-row">
+				<c:forEach items="${simplifiedWatchlist}" var="show" varStatus="status">
+					<div id="show-${show.id}" class="card col-sm-2 tvsm-card">
+						<img class="card-img-top" src="${show.poster}" alt="TV Show Poser">
+						<div class="card-body">
+						  <p class="card-title ellipsis">${show.name}</p>
+						  <p class="card-text"></p>
+						  <a href="#" class="btn btn-primary ellipsis">Show episodes</a>
+						</div>
+					</div>
+				</c:forEach>
 			</div>
-		</c:forEach>
+		</div>
+		<div id="show-details-panel" class="col-sm-4">
+			Test
+		</div>
 	</div>
 </body>
 </html>

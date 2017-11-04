@@ -26,3 +26,7 @@
 	overflow: hidden;
 	white-space: nowrap;
 }
+
+#show-details {
+	display: none;
+}
