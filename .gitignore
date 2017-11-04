@@ -13,5 +13,6 @@ buildNumber.properties
 
 .idea/
 .settings/
+out/
 *.iml
 .project
