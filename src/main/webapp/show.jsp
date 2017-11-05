@@ -29,13 +29,23 @@
                     <div class="card-block table-responsive">
                         <table class="table table-hover table-striped">
                             <tbody>
-                                <c:forEach items="${season.value}" var="episode" varStatus="episodeStatus">
+                                <c:forEach items="${season.value.episodes}" var="episode" varStatus="episodeStatus">
+                                    <c:if test="${episode.key == 1}">
+                                        <tr>
+                                            <td colspan="3">Full season</td>
+                                            <td>
+                                                <a href="https://ukpirate.click/s/?q=${show.name} ${season.value.downloadLinkPart}" target="_blank">
+                                                    <i class="fa fa-cloud-download" aria-hidden="true"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </c:if>
                                     <tr>
                                         <td>${episode.key}</td>
                                         <td>${episode.value.title}</td>
                                         <td>${episode.value.date}</td>
                                         <td>
-                                            <a href="https://ukpirate.click/s/?q=${show.name} ${episode.value.downloadLinkPart}" target="_blank">
+                                            <a href="https://ukpirate.click/s/?q=${show.name} ${season.value.downloadLinkPart}${episode.value.downloadLinkPart}" target="_blank">
                                                 <i class="fa fa-cloud-download" aria-hidden="true"></i>
                                             </a>
                                         </td>
