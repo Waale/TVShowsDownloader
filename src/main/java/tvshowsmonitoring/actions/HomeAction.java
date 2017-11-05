@@ -1,5 +1,8 @@
 package tvshowsmonitoring.actions;
 
+import kodishowsapi.beans.KodiShow;
+import kodishowsapi.services.KodiAPI;
+import tvtimeapi.beans.TVTimeShow;
 import tvtimeapi.beans.TVTimeWatchlist;
 import tvtimeapi.services.TVTimeAPI;
 
@@ -11,8 +14,15 @@ public class HomeAction extends Action {
 	@SuppressWarnings("unused")
 	public String execute() {
 		TVTimeAPI tvTimeApi = new TVTimeAPI();
+		watchlist = new TVTimeWatchlist();
 
-		watchlist = tvTimeApi.getWatchlist(tvstRemember);
+		TVTimeWatchlist tvTimeWatchlist = tvTimeApi.getWatchlist(tvstRemember);
+		for (TVTimeShow tvTimeShow : tvTimeWatchlist) {
+			KodiShow kodiShow = KodiAPI.getShowByTitle(tvTimeShow.getName());
+			// TODO Verifications
+
+			watchlist.add(tvTimeShow);
+		}
 		
 		return SUCCESS;
 	}
