@@ -19,11 +19,11 @@
 	    <artifactId>tvtime-api</artifactId>
 	    <version>1.0-SNAPSHOT</version>
     </dependency>
-	  <dependency>
-		  <groupId>com.sarryromain</groupId>
-		  <artifactId>kodishows-api</artifactId>
-		  <version>1.0-SNAPSHOT</version>
-	  </dependency>
+	<dependency>
+	  <groupId>com.sarryromain</groupId>
+	  <artifactId>kodishows-api</artifactId>
+	  <version>1.0-SNAPSHOT</version>
+	</dependency>
     <!-- https://mvnrepository.com/artifact/org.apache.struts/struts2-core -->
 	<dependency>
 	    <groupId>org.apache.struts</groupId>

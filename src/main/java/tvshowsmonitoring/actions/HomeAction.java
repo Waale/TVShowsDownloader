@@ -2,44 +2,47 @@ package tvshowsmonitoring.actions;
 
 import kodishowsapi.beans.KodiShow;
 import kodishowsapi.services.KodiAPI;
+import tvshowsmonitoring.services.ShowService;
 import tvtimeapi.beans.TVTimeShow;
 import tvtimeapi.beans.TVTimeWatchlist;
 import tvtimeapi.services.TVTimeAPI;
 
 public class HomeAction extends Action {
-	TVTimeWatchlist watchlist;
+    TVTimeWatchlist watchlist;
 
-	String tvstRemember;
-	
-	@SuppressWarnings("unused")
-	public String execute() {
-		TVTimeAPI tvTimeApi = new TVTimeAPI();
-		watchlist = new TVTimeWatchlist();
+    String tvstRemember;
 
-		TVTimeWatchlist tvTimeWatchlist = tvTimeApi.getWatchlist(tvstRemember);
-		for (TVTimeShow tvTimeShow : tvTimeWatchlist) {
-			KodiShow kodiShow = KodiAPI.getShowByTitle(tvTimeShow.getName());
-			// TODO Verifications
+    @SuppressWarnings("unused")
+    public String execute() {
+        TVTimeAPI tvTimeApi = new TVTimeAPI();
+        KodiAPI kodiAPI = new KodiAPI();
+        ShowService showService = new ShowService();
+        watchlist = new TVTimeWatchlist();
 
-			watchlist.add(tvTimeShow);
-		}
-		
-		return SUCCESS;
-	}
+        TVTimeWatchlist tvTimeWatchlist = tvTimeApi.getWatchlist(tvstRemember);
+        for (TVTimeShow tvTimeShow : tvTimeWatchlist) {
+            KodiShow kodiShow = kodiAPI.getShowByTitle(tvTimeShow.getName());
+            if (!showService.allEpisodesAreInLibrary(kodiShow, tvTimeShow)) {
+                watchlist.add(tvTimeShow);
+            }
+        }
 
-	public TVTimeWatchlist getWatchlist() {
-		return watchlist;
-	}
+        return SUCCESS;
+    }
 
-	public void setWatchlist(TVTimeWatchlist watchlist) {
-		this.watchlist = watchlist;
-	}
+    public TVTimeWatchlist getWatchlist() {
+        return watchlist;
+    }
 
-	public String getTvstRemember() {
-		return tvstRemember;
-	}
+    public void setWatchlist(TVTimeWatchlist watchlist) {
+        this.watchlist = watchlist;
+    }
 
-	public void setTvstRemember(String tvstRemember) {
-		this.tvstRemember = tvstRemember;
-	}
+    public String getTvstRemember() {
+        return tvstRemember;
+    }
+
+    public void setTvstRemember(String tvstRemember) {
+        this.tvstRemember = tvstRemember;
+    }
 }
