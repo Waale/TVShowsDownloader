@@ -6,15 +6,15 @@
 
 <struts>
 	<constant name="struts.devMode" value="true" />
-	
-    <package name="tvshows-monitoring" namespace="/" extends="struts-default">
 
-       	<action name="home" class="tvshowsmonitoring.actions.HomeAction">
-            <result name="SUCCESS">home.jsp</result>
-        </action>
-        <action name="show" class="tvshowsmonitoring.actions.ShowAction">
-            <result name="SUCCESS">show.jsp</result>
-        </action>
-        
-    </package>
+	<package name="tvshows-monitoring" namespace="/" extends="struts-default">
+
+		<action name="home" class="tvshowsmonitoring.actions.HomeAction">
+			<result name="SUCCESS">home.jsp</result>
+		</action>
+		<action name="show" class="tvshowsmonitoring.actions.ShowAction">
+			<result name="SUCCESS">show.jsp</result>
+		</action>
+
+	</package>
 </struts>
