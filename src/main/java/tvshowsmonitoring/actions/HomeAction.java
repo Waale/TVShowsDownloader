@@ -21,7 +21,7 @@ public class HomeAction extends Action {
 
         TVTimeWatchlist tvTimeWatchlist = tvTimeApi.getWatchlist(tvstRemember);
         for (TVTimeShow tvTimeShow : tvTimeWatchlist) {
-            KodiShow kodiShow = kodiAPI.getShowByTitle(tvTimeShow.getName());
+            KodiShow kodiShow = kodiAPI.getShowAndDetailsByTitle(tvTimeShow.getName());
             if (!showService.allEpisodesAreInLibrary(kodiShow, tvTimeShow)) {
                 watchlist.add(tvTimeShow);
             }

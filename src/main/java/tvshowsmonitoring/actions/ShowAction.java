@@ -1,5 +1,8 @@
 package tvshowsmonitoring.actions;
 
+import kodishowsapi.beans.KodiShow;
+import kodishowsapi.services.KodiAPI;
+import tvshowsmonitoring.services.ShowService;
 import tvtimeapi.beans.TVTimeShow;
 import tvtimeapi.services.TVTimeAPI;
 
@@ -15,7 +18,7 @@ public class ShowAction extends Action {
 
     String episode;
 
-    Boolean remainingEpisodes;
+    Integer remainingEpisodes;
 
     String poster;
 
@@ -25,8 +28,13 @@ public class ShowAction extends Action {
 
     public String execute() {
         TVTimeAPI tvTimeAPI = new TVTimeAPI();
+        KodiAPI kodiAPI = new KodiAPI();
+        ShowService showService = new ShowService();
 
-        show = tvTimeAPI.getShow(id, name, episode, remainingEpisodes, poster, link, tvstRemember);
+        TVTimeShow tvTimeShow = tvTimeAPI.getShow(id, name, episode, remainingEpisodes, poster, link, tvstRemember);
+        KodiShow kodiShow = kodiAPI.getShowAndDetailsByTitle(name);
+        
+        show = showService.getUnownedEpisodes(kodiShow, tvTimeShow);
 
         return SUCCESS;
     }
@@ -63,11 +71,11 @@ public class ShowAction extends Action {
         this.episode = episode;
     }
 
-    public Boolean getRemainingEpisodes() {
+    public Integer getRemainingEpisodes() {
         return remainingEpisodes;
     }
 
-    public void setRemainingEpisodes(Boolean remainingEpisodes) {
+    public void setRemainingEpisodes(Integer remainingEpisodes) {
         this.remainingEpisodes = remainingEpisodes;
     }
 
