@@ -1,7 +1,9 @@
 package tvshowsmonitoring.services;
 
+import java.util.HashMap;
 import java.util.Map;
 
+import kodishowsapi.beans.KodiSeason;
 import kodishowsapi.beans.KodiShow;
 import tvtimeapi.beans.TVTimeEpisode;
 import tvtimeapi.beans.TVTimeSeason;
@@ -16,8 +18,7 @@ public class ShowService {
     }
     
     public TVTimeShow getUnownedEpisodes(KodiShow kodiShow, TVTimeShow tvTimeShow) {
-    	TVTimeShow show = tvTimeShow;
-    	show.setSeasons(null);
+    	Map<Integer, TVTimeSeason> unownedSeasons = new HashMap<Integer, TVTimeSeason>();
     	
     	for (Map.Entry<Integer, TVTimeSeason> seasonEntry : tvTimeShow.getSeasons().entrySet()) {
     		TVTimeSeason unownedSeason = new TVTimeSeason(seasonEntry.getKey());
@@ -27,11 +28,12 @@ public class ShowService {
     			}
     		}
     		
-    		if (!unownedSeason.hasEpisodes()) {
-    			show.addSeason(seasonEntry.getKey(), unownedSeason);
+    		if (unownedSeason.hasEpisodes()) {
+				unownedSeasons.put(seasonEntry.getKey(), unownedSeason);
     		}
     	}
-    	
-    	return show;
+
+        tvTimeShow.setSeasons(unownedSeasons);
+    	return tvTimeShow;
     }
 }
