@@ -13,7 +13,8 @@ function displayShowDetails(btn) {
     $(".show-details").hide();
 
     var showDetails = $("#" + id + "-details");
-    if (!showDetails.length) {
+    /*if (!showDetails.length) {*/
+        disableButtons();
         $("#show-details-loading").show();
         var name = card.attr("name");
         var episode = card.attr("episode");
@@ -26,8 +27,19 @@ function displayShowDetails(btn) {
         $.get("show", params, function(data) {
             $("#show-details-loading").hide();
             showDetailsPanel.append(data);
+            enableButtons();
         });
-    } else {
+    /*} else {
         showDetails.show();
-    }
+    }*/
+}
+
+function disableButtons() {
+    var buttons = $(".tvsm-card .btn");
+    buttons.addClass("disabled");
+}
+
+function enableButtons() {
+    var buttons = $(".tvsm-card .btn");
+    buttons.removeClass("disabled");
 }
