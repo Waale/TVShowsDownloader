@@ -27,6 +27,8 @@ public class HomeAction extends Action {
             }
         }
 
+        kodiAPI.closeConnection();
+
         return SUCCESS;
     }
 

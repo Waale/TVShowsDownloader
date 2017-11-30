@@ -36,6 +36,8 @@ public class ShowAction extends Action {
         
         show = showService.getUnownedEpisodes(kodiShow, tvTimeShow);
 
+        kodiAPI.closeConnection();
+
         return SUCCESS;
     }
 
