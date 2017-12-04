@@ -13,25 +13,25 @@ function displayShowDetails(btn) {
     $(".show-details").hide();
 
     var showDetails = $("#" + id + "-details");
-    /*if (!showDetails.length) {*/
-        disableButtons();
-        $("#show-details-loading").show();
-        var name = card.attr("name");
-        var episode = card.attr("episode");
-        var remainingEpisodes = card.attr("remaining-episodes");
-        var link = card.attr("link");
-        var tvstRemember = card.attr("tvst-remember");
+    if (showDetails.length) {
+        showDetails.remove();
+    }
 
-        var params = {"id": id, "name": name, "episode": episode, "remainingEpisodes": remainingEpisodes, "link": link, "tvstRemember": tvstRemember};
+    disableButtons();
+    $("#show-details-loading").show();
+    var name = card.attr("name");
+    var episode = card.attr("episode");
+    var remainingEpisodes = card.attr("remaining-episodes");
+    var link = card.attr("link");
+    var tvstRemember = card.attr("tvst-remember");
 
-        $.get("show", params, function(data) {
-            $("#show-details-loading").hide();
-            showDetailsPanel.append(data);
-            enableButtons();
-        });
-    /*} else {
-        showDetails.show();
-    }*/
+    var params = {"id": id, "name": name, "episode": episode, "remainingEpisodes": remainingEpisodes, "link": link, "tvstRemember": tvstRemember};
+
+    $.get("show", params, function(data) {
+        $("#show-details-loading").hide();
+        showDetailsPanel.append(data);
+        enableButtons();
+    });
 }
 
 function disableButtons() {
