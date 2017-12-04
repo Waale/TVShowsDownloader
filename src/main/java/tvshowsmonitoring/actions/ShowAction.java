@@ -26,6 +26,8 @@ public class ShowAction extends Action {
 
     String tvstRemember;
 
+    String showDownloadLinkPart;
+
     public String execute() {
         TVTimeAPI tvTimeAPI = new TVTimeAPI();
         KodiAPI kodiAPI = new KodiAPI();
@@ -33,7 +35,8 @@ public class ShowAction extends Action {
 
         TVTimeShow tvTimeShow = tvTimeAPI.getShow(id, name, episode, remainingEpisodes, poster, link, tvstRemember);
         KodiShow kodiShow = kodiAPI.getShowAndDetailsByTitle(name);
-        
+
+        showDownloadLinkPart = tvTimeShow.getName().replace("'", "");
         show = showService.getUnownedEpisodes(kodiShow, tvTimeShow);
 
         kodiAPI.closeConnection();
@@ -103,5 +106,13 @@ public class ShowAction extends Action {
 
     public void setTvstRemember(String tvstRemember) {
         this.tvstRemember = tvstRemember;
+    }
+
+    public String getShowDownloadLinkPart() {
+        return showDownloadLinkPart;
+    }
+
+    public void setShowDownloadLinkPart(String showDownloadLinkPart) {
+        this.showDownloadLinkPart = showDownloadLinkPart;
     }
 }

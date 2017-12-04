@@ -34,7 +34,7 @@
                                         <tr>
                                             <td colspan="3">Full season</td>
                                             <td>
-                                                <a href="https://ukpirate.click/s/?q=${show.name} ${season.value.downloadLinkPart}" target="_blank">
+                                                <a href="https://ukpirate.click/s/?q=${showDownloadLinkPart} ${season.value.downloadLinkPart}" target="_blank">
                                                     <i class="fa fa-cloud-download" aria-hidden="true"></i>
                                                 </a>
                                             </td>
@@ -45,7 +45,7 @@
                                         <td>${episode.value.title}</td>
                                         <td>${episode.value.date}</td>
                                         <td>
-                                            <a href="https://ukpirate.click/s/?q=${show.name} ${season.value.downloadLinkPart}${episode.value.downloadLinkPart}" target="_blank">
+                                            <a href="https://ukpirate.click/s/?q=${showDownloadLinkPart} ${season.value.downloadLinkPart}${episode.value.downloadLinkPart}" target="_blank">
                                                 <i class="fa fa-cloud-download" aria-hidden="true"></i>
                                             </a>
                                         </td>
