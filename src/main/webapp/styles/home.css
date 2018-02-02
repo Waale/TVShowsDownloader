@@ -13,6 +13,7 @@ body {
 .tvsm-row {
 	margin-left: 0;
 	margin-right: 0;
+	min-height: 100vh;
 }
 
 .tvsm-card {

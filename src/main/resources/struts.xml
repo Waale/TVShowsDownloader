@@ -15,6 +15,9 @@
 		<action name="show" class="tvshowsmonitoring.actions.ShowAction">
 			<result name="SUCCESS">show.jsp</result>
 		</action>
+		<action name="auto-download" class="tvshowsmonitoring.actions.AutoDownloadAction">
+			<result name="SUCCESS">auto-download.jsp</result>
+		</action>
 
 	</package>
 </struts>

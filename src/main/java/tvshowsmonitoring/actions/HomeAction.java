@@ -12,7 +12,6 @@ public class HomeAction extends Action {
 
     String tvstRemember;
 
-    @SuppressWarnings("unused")
     public String execute() {
         TVTimeAPI tvTimeApi = new TVTimeAPI();
         KodiAPI kodiAPI = new KodiAPI();

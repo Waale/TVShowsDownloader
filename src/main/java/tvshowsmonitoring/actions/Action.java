@@ -13,4 +13,6 @@ public abstract class Action {
     public String getParamValue(String param) {
         return ActionContext.getContext().getParameters().get(param).getValue();
     }
+
+    public abstract String execute();
 }
