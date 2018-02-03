@@ -9,6 +9,7 @@ import kodishowsapi.beans.KodiShow;
 import qbittorrentapi.beans.QBitTorrent;
 import qbittorrentapi.beans.QBitTorrentList;
 import qbittorrentapi.services.QBitAPI;
+import thepiratebayapi.services.TPBayAPI;
 import tvtimeapi.beans.TVTimeEpisode;
 import tvtimeapi.beans.TVTimeSeason;
 import tvtimeapi.beans.TVTimeShow;
@@ -61,6 +62,9 @@ public class ShowService {
 
 	private Map<Integer, TVTimeEpisode> getNotDownloadingEpisodes(QBitTorrentList qBitTorrentList, String tvShowName, TVTimeSeason tvTimeSeason) {
 		Map<Integer, TVTimeEpisode> episodes = new HashMap<Integer, TVTimeEpisode>();
+        if (tvShowName.substring(tvShowName.length() - 1).equals(".")) {
+            tvShowName = tvShowName.substring(0, tvShowName.length() - 1);
+        }
 		episodes.putAll(tvTimeSeason.getEpisodes());
 		for (Map.Entry<Integer, TVTimeEpisode> tvTimeEpisodeEntry : tvTimeSeason.getEpisodes().entrySet()) {
             TVTimeEpisode tvTimeEpisode = tvTimeEpisodeEntry.getValue();
@@ -76,7 +80,14 @@ public class ShowService {
 		return episodes;
 	}
 
-	public void downloadEpisodes(TVTimeShow tvTimeShow) {
-    	// TODO Search episodes on ThePirateBay and download on qBittorrent
+	public void downloadEpisodes(QBitAPI qBitAPI, TPBayAPI tpBayAPI, TVTimeShow tvTimeShow) {
+		TorrentService torrentService = new TorrentService();
+		for (Map.Entry<Integer, TVTimeSeason> seasonEntry : tvTimeShow.getSeasons().entrySet()) {
+		    TVTimeSeason season = seasonEntry.getValue();
+			for (Map.Entry<Integer, TVTimeEpisode> episodeEntry : season.getEpisodes().entrySet()) {
+			    TVTimeEpisode episode = episodeEntry.getValue();
+				torrentService.downloadEpisode(qBitAPI, tpBayAPI, tvTimeShow.getName(), season.getDownloadLinkPart() + episode.getDownloadLinkPart());
+			}
+		}
 	}
 }

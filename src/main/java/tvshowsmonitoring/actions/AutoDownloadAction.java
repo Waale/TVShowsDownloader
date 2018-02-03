@@ -3,7 +3,7 @@ package tvshowsmonitoring.actions;
 import kodishowsapi.beans.KodiShow;
 import kodishowsapi.services.KodiAPI;
 import qbittorrentapi.services.QBitAPI;
-import tvshowsmonitoring.services.KodiService;
+import thepiratebayapi.services.TPBayAPI;
 import tvshowsmonitoring.services.ShowService;
 import tvshowsmonitoring.services.TorrentService;
 import tvtimeapi.beans.TVTimeShow;
@@ -24,9 +24,8 @@ public class AutoDownloadAction extends Action {
         TVTimeAPI tvTimeApi = new TVTimeAPI();
         KodiAPI kodiAPI = new KodiAPI();
         QBitAPI qBitAPI = new QBitAPI(qBittorrentUrl);
+        TPBayAPI tpBayAPI = new TPBayAPI("https://ukpirate.click");
         ShowService showService = new ShowService();
-        KodiService kodiService = new KodiService();
-        TorrentService torrentService = new TorrentService();
 
         try {
             qBitAPI.pauseAllTorrents();
@@ -34,17 +33,13 @@ public class AutoDownloadAction extends Action {
             e.printStackTrace();
         }
 
-        torrentService.removeDownloadedEpisodes(qBitAPI);
-        kodiService.scanForNewEpisodes();
-        kodiService.syncKodiToTvTime();
-
         TVTimeWatchlist tvTimeWatchlist = tvTimeApi.getWatchlist(tvstRemember);
         for (TVTimeShow tvTimeShow : tvTimeWatchlist) {
             KodiShow kodiShow = kodiAPI.getShowAndDetailsByTitle(tvTimeShow.getName());
             if (!showService.allEpisodesAreInLibrary(kodiShow, tvTimeShow)) {
                 try {
                     tvTimeShow.buildSeasons(tvstRemember);
-                    showService.downloadEpisodes(showService.getNotDownloadingEpisodes(qBitAPI.getTorrentList(), showService.getUnownedEpisodes(kodiShow, tvTimeShow)));
+                    showService.downloadEpisodes(qBitAPI, tpBayAPI, showService.getNotDownloadingEpisodes(qBitAPI.getTorrentList(), showService.getUnownedEpisodes(kodiShow, tvTimeShow)));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
