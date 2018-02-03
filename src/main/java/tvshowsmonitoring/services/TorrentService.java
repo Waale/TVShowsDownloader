@@ -27,7 +27,7 @@ public class TorrentService {
             params.put("category", "Série");
             params.put("rename", showName + " " + episode);
             params.put("paused", true);
-            params.put("savepath", "B:\\Vidéos\\Séries\\" + showName);
+            params.put("savepath", "B:\\Videos\\Séries\\" + showName);
             try {
                 qBitAPI.addTorrent(tpBayTorrent.getMagnet(), params);
             } catch (IOException e) {
