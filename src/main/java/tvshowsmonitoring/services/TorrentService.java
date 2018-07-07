@@ -24,10 +24,10 @@ public class TorrentService {
             TPBayTorrent tpBayTorrent = tpBayAPI.getTorrent(tpBayTorrentResultList.get(0).getUrl());
 
             Map<String, Serializable> params = new HashMap<String, Serializable>();
-            params.put("category", "Série");
+            params.put("category", "Serie");
             params.put("rename", showName + " " + episode);
             params.put("paused", true);
-            params.put("savepath", "B:\\Videos\\Séries\\" + showName);
+            params.put("savepath", "B:\\Videos\\Series\\" + showName);
             try {
                 qBitAPI.addTorrent(tpBayTorrent.getMagnet(), params);
             } catch (IOException e) {
