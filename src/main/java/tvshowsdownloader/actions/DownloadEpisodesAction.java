@@ -2,11 +2,11 @@ package tvshowsdownloader.actions;
 
 import java.util.List;
 
-import tvshowsdownloader.beans.input.ShowInput;
+import tvshowsdownloader.beans.Show;
 
 public class DownloadEpisodesAction extends Action {
 	
-	private List<ShowInput> data;
+	private List<Show> data;
 	
 	private String jsonStringResult;
 
@@ -15,11 +15,11 @@ public class DownloadEpisodesAction extends Action {
 		return SUCCESS;
 	}
 
-	public List<ShowInput> getData() {
+	public List<Show> getData() {
 		return data;
 	}
 
-	public void setData(List<ShowInput> data) {
+	public void setData(List<Show> data) {
 		this.data = data;
 	}
 
