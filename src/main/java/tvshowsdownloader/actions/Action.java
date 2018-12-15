@@ -1,4 +1,4 @@
-package tvshowsmonitoring.actions;
+package tvshowsdownloader.actions;
 
 import com.opensymphony.xwork2.ActionContext;
 
@@ -7,8 +7,6 @@ import com.opensymphony.xwork2.ActionContext;
  */
 public abstract class Action {
     public static final String SUCCESS = "SUCCESS";
-    public static final String FAILURE = "FAILURE";
-    public static final String NOT_LOGGED = "NOT_LOGGED";
 
     public String getParamValue(String param) {
         return ActionContext.getContext().getParameters().get(param).getValue();

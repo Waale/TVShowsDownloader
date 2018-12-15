@@ -2,43 +2,67 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.sarryromain</groupId>
-	<artifactId>tvshows-monitoring</artifactId>
+	<artifactId>tvshows-downloader</artifactId>
 	<packaging>war</packaging>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>tvshows-monitoring Maven Webapp</name>
+	<version>1.0-SNAPSHOT</version>
+	<name>TV Shows Downloader</name>
 	<url>http://maven.apache.org</url>
 	<dependencies>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>3.8.1</version>
-			<scope>test</scope>
-		</dependency>
+		<!-- Tracker -->
 		<dependency>
 			<groupId>com.sarryromain</groupId>
 			<artifactId>tvtime-api</artifactId>
-			<version>1.0-SNAPSHOT</version>
+			<version>1.0</version>
 		</dependency>
-		<dependency>
-			<groupId>com.sarryromain</groupId>
-			<artifactId>kodishows-api</artifactId>
-			<version>1.0-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>com.sarryromain</groupId>
-			<artifactId>qbittorrent-api</artifactId>
-			<version>1.0-SNAPSHOT</version>
-		</dependency>
+		<!-- Index -->
 		<dependency>
 			<groupId>com.sarryromain</groupId>
 			<artifactId>thepiratebay-api</artifactId>
-			<version>1.0-SNAPSHOT</version>
+			<version>1.0</version>
 		</dependency>
+		<!-- Downloaders -->
+		<dependency>
+			<groupId>com.sarryromain</groupId>
+			<artifactId>qbittorrent-api</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sarryromain</groupId>
+			<artifactId>synologydownloadstation-api</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<!-- Library Managers -->
+		<dependency>
+			<groupId>com.sarryromain</groupId>
+			<artifactId>kodishows-api</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sarryromain</groupId>
+			<artifactId>plex-api</artifactId>
+			<version>1.0</version>
+		</dependency>
+		
 		<!-- https://mvnrepository.com/artifact/org.apache.struts/struts2-core -->
 		<dependency>
 			<groupId>org.apache.struts</groupId>
 			<artifactId>struts2-core</artifactId>
 			<version>2.5.13</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.struts</groupId>
+			<artifactId>struts2-json-plugin</artifactId>
+			<version>2.5.13</version>
+	   </dependency>
+		<dependency>
+			<groupId>org.apache.struts</groupId>
+			<artifactId>struts2-convention-plugin</artifactId>
+			<version>2.5.13</version>
+	   </dependency>
+	   <dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.6.3</version>
 		</dependency>
 		<dependency>
 			<groupId>jstl</groupId>
@@ -47,7 +71,7 @@
 		</dependency>
 	</dependencies>
 	<build>
-		<finalName>tvshows-monitoring</finalName>
+		<finalName>tvshows-downloader</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
