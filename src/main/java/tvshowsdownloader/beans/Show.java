@@ -1,5 +1,6 @@
 package tvshowsdownloader.beans;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Show {
@@ -7,7 +8,7 @@ public class Show {
 
 	private String banner;
 	
-	private List<Episode> episodes;
+	private List<Episode> episodes = new ArrayList<>();
 
 	public String getName() {
 		return name;
@@ -23,6 +24,10 @@ public class Show {
 
 	public void setBanner(String banner) {
 		this.banner = banner;
+	}
+
+	public void addEpisode(Episode episode) {
+		episodes.add(episode);
 	}
 
 	public List<Episode> getEpisodes() {

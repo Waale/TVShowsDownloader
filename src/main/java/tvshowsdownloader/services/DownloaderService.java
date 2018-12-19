@@ -1,18 +1,17 @@
 package tvshowsdownloader.services;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-
-import qbittorrentapi.exceptions.QBitLoginException;
-import qbittorrentapi.exceptions.QBitParametersException;
-import qbittorrentapi.exceptions.QBitURLException;
 import qbittorrentapi.services.QBitAPI;
 import synologydownloadstationapi.services.SynoDSAPI;
+import tvshowsdownloader.beans.Episode;
 import tvshowsdownloader.beans.Show;
 import tvshowsdownloader.beans.Torrent;
 import tvshowsdownloader.enums.Downloader;
 import tvshowsdownloader.exceptions.PropertyException;
+
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 class DownloaderService {
 	private Downloader downloader;
@@ -21,32 +20,65 @@ class DownloaderService {
 	
 	private SynoDSAPI synoDsAPI;
 
-	protected DownloaderService(Properties properties) throws QBitLoginException, QBitURLException, QBitParametersException, PropertyException, Exception {
+	protected DownloaderService(PropertiesService propertiesService) throws Exception {
 		super();
-		downloader = Downloader.getByValue(properties.getProperty("downloader"));
+
+		downloader = Downloader.getByValue(propertiesService.getProperty("downloader"));
+		if (downloader == null) {
+			throw new PropertyException("downloader", propertiesService.getProperty("downloader"));
+		}
+
 		switch (downloader) {
 			case QBITTORRENT:
-				qBitAPI = new QBitAPI(properties.getProperty("qbittorrent.url"), properties.getProperty("qbittorrent.username"), properties.getProperty("qbittorrent.password"));
+				qBitAPI = new QBitAPI(propertiesService.getProperty("qbittorrent.url"), propertiesService.getProperty("qbittorrent.username"), propertiesService.getProperty("qbittorrent.password"));
 				break;
 			case SYNODS:
-				synoDsAPI = new SynoDSAPI(properties.getProperty("synology.url"), properties.getProperty("synology.username"), properties.getProperty("synology.password"));
+				synoDsAPI = new SynoDSAPI(propertiesService.getProperty("synology-ds.url"), propertiesService.getProperty("synology-ds.username"), propertiesService.getProperty("synology-ds.password"));
 				break;
-			default:
-				throw new PropertyException("downloader", properties.getProperty("downloader"));
 		}
 	}
 
-	public List<Show> getShows() {
-		List<Show> shows = new ArrayList<>();
+	public List<Show> getShows() throws Exception {
+		List<Torrent> torrents = new ArrayList<>();
 
-		return shows;
+		switch (downloader) {
+			case QBITTORRENT:
+				torrents = getQBitTorrents();
+				break;
+			case SYNODS:
+				torrents = getSynoDSTorrents();
+				break;
+		}
+
+		Map<String, Show> shows = new HashMap<>();
+		Pattern pattern  = Pattern.compile("(.*) S(\\d+)E(\\d+)");
+		for (Torrent torrent : torrents) {
+			Matcher matcher = pattern.matcher(torrent.getName());
+			if (matcher.matches()) {
+				String showName = matcher.group(0);
+
+				Episode episode = new Episode();
+				episode.setSeason(Integer.valueOf(matcher.group(1)));
+				episode.setNumber(Integer.valueOf(matcher.group(2)));
+
+				Show show = shows.get(showName);
+				if (show == null) {
+					show = new Show();
+					show.setName(showName);
+				}
+				show.addEpisode(episode);
+				shows.put(showName, show);
+			}
+		}
+
+		return shows.values().stream().collect(Collectors.toList());
 	}
 
-	public List<Torrent> getQBitTorrents() {
-
+	public List<Torrent> getQBitTorrents() throws Exception {
+		return qBitAPI.getTorrentList(null).stream().map(t -> new Torrent(t)).collect(Collectors.toList());
 	}
 
-	public List<Torrent> getSynoDSTorrents() {
-
+	public List<Torrent> getSynoDSTorrents() throws Exception {
+		return synoDsAPI.getTorrentList().stream().map(t -> new Torrent(t)).collect(Collectors.toList());
 	}
 }

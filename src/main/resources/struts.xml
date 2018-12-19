@@ -9,7 +9,7 @@
 
 	<package name="tvshows-downloader" namespace="/" extends="struts-default">
 		<action name="home" class="tvshowsdownloader.actions.HomeAction">
-			<result name="SUCCESS">home.jsp</result>
+			<result name="success">home.jsp</result>
 		</action>
 	</package>
 
@@ -23,10 +23,35 @@
 		        </interceptor-ref>
 		    </interceptor-stack>
 		</interceptors>
+
+		<default-interceptor-ref name="apiStack" />
 		
-		<action name="download-episodes" class="tvshowsdownloader.actions.DownloadEpisodesAction">
-			<interceptor-ref name="apiStack"/>
-			<result name="SUCCESS" type="json" />
-		</action>
+		<global-results>
+			<result name="success" type="json" />
+			<result name="bad-request-error" type="json">
+				<param name="statusCode">400</param>
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">^actionErrors.*</param>
+			</result>
+			<result name="unauthorized-error" type="json">
+				<param name="statusCode">401</param>
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">^actionErrors.*</param>
+			</result>
+			<result name="not-found-error" type="json">
+				<param name="statusCode">404</param>
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">^actionErrors.*</param>
+			</result>
+			<result name="error" type="json">
+				<param name="statusCode">500</param>
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">^actionErrors.*</param>
+			</result>
+		</global-results>
+		
+		<action name="download-episodes" class="tvshowsdownloader.actions.DownloadEpisodesAction" />
+		<action name="get-episodes" class="tvshowsdownloader.actions.GetEpisodesAction"/>
+
 	</package>
 </struts>

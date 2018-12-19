@@ -3,14 +3,10 @@ package tvshowsdownloader.services;
 import kodishowsapi.beans.KodiEpisode;
 import kodishowsapi.beans.KodiSeason;
 import kodishowsapi.beans.KodiShow;
-import kodishowsapi.exceptions.KodiDatabaseConnectionException;
-import kodishowsapi.exceptions.KodiEpisodesFetchingException;
-import kodishowsapi.exceptions.KodiShowFetchingException;
 import kodishowsapi.services.KodiAPI;
 import plexapi.beans.PlexEpisode;
 import plexapi.beans.PlexSeason;
 import plexapi.beans.PlexShow;
-import plexapi.exceptions.PlexShowFetchingException;
 import plexapi.services.PlexAPI;
 import tvshowsdownloader.beans.Episode;
 import tvshowsdownloader.beans.Show;
@@ -20,7 +16,6 @@ import tvshowsdownloader.exceptions.PropertyException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 class LibraryService {
 	private Library library;
@@ -29,35 +24,40 @@ class LibraryService {
 	
 	private PlexAPI plexAPI;
 
-	protected LibraryService(Properties properties) throws KodiDatabaseConnectionException, PropertyException {
+	protected LibraryService(PropertiesService propertiesService) throws Exception {
 		super();
-		library = Library.getByValue(properties.getProperty("library"));
+
+		library = Library.getByValue(propertiesService.getProperty("library"));
+		if (library == null) {
+			throw new PropertyException("library", propertiesService.getProperty("library"));
+		}
+
 		switch (library) {
 			case KODI:
-				kodiAPI = new KodiAPI("kodi.path");
+				kodiAPI = new KodiAPI(propertiesService.getProperty("kodi.path"));
 				break;
 			case PLEX:
-				plexAPI = new PlexAPI("plex.url", "plex.token");
+				plexAPI = new PlexAPI(propertiesService.getProperty("plex.url"), propertiesService.getProperty("plex.token"));
 				break;
-			default:
-				throw new PropertyException("library", properties.getProperty("library"));
 		}
 	}
 
-	public List<Show> getShows() throws KodiShowFetchingException, KodiEpisodesFetchingException, PlexShowFetchingException {
+	public List<Show> getShows() throws Exception {
 		List<Show> shows = null;
 
 		switch (library) {
 			case KODI:
 				shows = getKodiShows();
+				break;
 			case PLEX:
 				shows = getPlexShows();
+				break;
 		}
 
 		return shows;
 	}
 
-	private List<Show> getKodiShows() throws KodiShowFetchingException, KodiEpisodesFetchingException {
+	private List<Show> getKodiShows() throws Exception {
 		List<Show> shows = new ArrayList<>();
 
 		for (KodiShow kodiShow : kodiAPI.getShows()) {
@@ -70,6 +70,7 @@ class LibraryService {
 					episodes.add(new Episode(seasonEntry.getKey(), episodeEntry.getKey(), episodeEntry.getValue().getTitle()));
 				}
 			}
+			show.setEpisodes(episodes);
 
 			shows.add(show);
 		}
@@ -77,7 +78,7 @@ class LibraryService {
 		return shows;
 	}
 
-	private List<Show> getPlexShows() throws PlexShowFetchingException {
+	private List<Show> getPlexShows() throws Exception {
 		List<Show> shows = new ArrayList<>();
 
 		for (PlexShow plexShow : plexAPI.getShows()) {
@@ -90,6 +91,7 @@ class LibraryService {
 					episodes.add(new Episode(seasonEntry.getKey(), episodeEntry.getKey(), episodeEntry.getValue().getTitle()));
 				}
 			}
+			show.setEpisodes(episodes);
 
 			shows.add(show);
 		}

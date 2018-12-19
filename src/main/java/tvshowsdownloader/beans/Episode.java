@@ -38,4 +38,8 @@ public class Episode {
 	public void setName(String name) {
 		this.name = name;
 	}
+
+	public String getNumberAsString() {
+		return "S" + String.format("%02d", season) + "E" + String.format("%02d", number);
+	}
 }
