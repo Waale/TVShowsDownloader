@@ -74,11 +74,39 @@ class DownloaderService {
 		return shows.values().stream().collect(Collectors.toList());
 	}
 
-	public List<Torrent> getQBitTorrents() throws Exception {
+	private List<Torrent> getQBitTorrents() throws Exception {
 		return qBitAPI.getTorrentList(null).stream().map(t -> new Torrent(t)).collect(Collectors.toList());
 	}
 
-	public List<Torrent> getSynoDSTorrents() throws Exception {
+	private List<Torrent> getSynoDSTorrents() throws Exception {
 		return synoDsAPI.getTorrentList().stream().map(t -> new Torrent(t)).collect(Collectors.toList());
+	}
+
+	public void addTorrent(String url, String destination, String name) throws Exception {
+		List<String> urls = Arrays.asList(url);
+
+		switch (downloader) {
+			case QBITTORRENT:
+				addQBitTorrents(urls, destination, name);
+				break;
+			case SYNODS:
+				addSynoDSTorrents(urls, destination);
+				break;
+		}
+	}
+
+	private void addQBitTorrents(List<String> urls, String destination, String name) throws Exception {
+		Map<String, String> parameters = new HashMap<>();
+		parameters.put("rename", name);
+		parameters.put("savePath", destination);
+
+		qBitAPI.addTorrents(urls, parameters);
+	}
+
+	private void addSynoDSTorrents(List<String> urls, String destination) throws Exception {
+		Map<String, String> parameters = new HashMap<>();
+		parameters.put("destination", destination);
+
+		synoDsAPI.addTorrents(urls, destination);
 	}
 }

@@ -9,6 +9,7 @@ import synologydownloadstationapi.exceptions.SynoDSParameterException;
 import synologydownloadstationapi.exceptions.SynoDSURLException;
 import thepiratebayapi.exceptions.TPBayParametersException;
 import thepiratebayapi.exceptions.TPBayURLException;
+import tvshowsdownloader.exceptions.ParameterException;
 import tvshowsdownloader.exceptions.PropertyException;
 import tvtimeapi.exceptions.TVTimeLoginException;
 import tvtimeapi.exceptions.TVTimeURLException;
@@ -20,7 +21,8 @@ import java.util.Map;
 /**
  * Created by Romain on 16/12/2018.
  */
-public abstract class Action extends ActionSupport {
+public abstract class APIAction extends ActionSupport {
+
     public static final String BAD_REQUEST = "bad-request-error";
 
     public static final String UNAUTHORIZED = "unauthorized-error";
@@ -29,13 +31,14 @@ public abstract class Action extends ActionSupport {
 
     protected Map<Class<? extends Exception>, String> errorMap = new HashMap<>();
 
-    public Action() {
+    public APIAction() {
         initErrorMap();
     }
 
     private void initErrorMap() {
         // 400
         errorMap.put(PropertyException.class, BAD_REQUEST);
+        errorMap.put(ParameterException.class, BAD_REQUEST);
         errorMap.put(QBitParametersException.class, BAD_REQUEST);
         errorMap.put(TPBayParametersException.class, BAD_REQUEST);
         errorMap.put(SynoDSParameterException.class, BAD_REQUEST);
@@ -53,7 +56,9 @@ public abstract class Action extends ActionSupport {
         errorMap.put(SynoDSURLException.class, NOT_FOUND);
     }
 
-    protected String getErrorCode(Exception e) {
+    protected String returnError(Exception e) {
+        addActionError(e.getMessage());
+
         String errorCode = errorMap.get(e.getClass());
 
         if (errorCode == null) {

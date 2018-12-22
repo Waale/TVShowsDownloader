@@ -49,9 +49,16 @@
 				<param name="includeProperties">^actionErrors.*</param>
 			</result>
 		</global-results>
-		
+
+		<action name="get-all-episodes" class="tvshowsdownloader.actions.GetAllEpisodesAction">
+			<param name="root">shows</param>
+		</action>
+		<action name="get-show-episodes" class="tvshowsdownloader.actions.GetShowEpisodesAction">
+			<param name="root">show</param>
+		</action>
+		<action name="download-all-episodes" class="tvshowsdownloader.actions.DownloadAllEpisodesAction" />
+		<action name="download-show-episodes" class="tvshowsdownloader.actions.DownloadShowEpisodesAction" />
 		<action name="download-episodes" class="tvshowsdownloader.actions.DownloadEpisodesAction" />
-		<action name="get-episodes" class="tvshowsdownloader.actions.GetEpisodesAction"/>
 
 	</package>
 </struts>

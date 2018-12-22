@@ -20,20 +20,16 @@
 <script>
 	$(document).ready(function() {
 		var data = {};
-		data["data"] = [{"name": "The Walking Dead", "episodes": [{"season": 1, "episode": 1}, {"season": 1, "episode": 2}, {"season": 1, "episode": 3}]}];
-		console.log(data);
-		data = JSON.stringify(data);
-		console.log(data);
-		
+
 		$.ajax({
-		    url: "api/download-episodes",
-		    data: data,
+		    url: "api/download-all-episodes",
+		    data: JSON.stringify(data),
 		    dataType: 'json',
 		    contentType: 'application/json',
 		    type: 'POST',
 		    async: true,
 		    success: function (res) {
-		        console.log(res.data);
+		        console.log(res);
 		    }
 		});
 	});

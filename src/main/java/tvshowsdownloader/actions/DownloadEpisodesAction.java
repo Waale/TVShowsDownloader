@@ -1,34 +1,30 @@
 package tvshowsdownloader.actions;
 
+import tvshowsdownloader.beans.Show;
+import tvshowsdownloader.services.DownloadService;
+
 import java.util.List;
 
-import tvshowsdownloader.beans.Show;
+public class DownloadEpisodesAction extends APIAction {
 
-public class DownloadEpisodesAction extends Action {
-	
-	private List<Show> data;
-	
-	private String jsonStringResult;
+	private List<Show> shows;
 
 	@Override
 	public String execute() {
+		try {
+			new DownloadService().downloadShows(shows);
+		} catch (Exception e) {
+			return returnError(e);
+		}
+
 		return SUCCESS;
 	}
 
-	public List<Show> getData() {
-		return data;
+	public List<Show> getShows() {
+		return shows;
 	}
 
-	public void setData(List<Show> data) {
-		this.data = data;
+	public void setShows(List<Show> shows) {
+		this.shows = shows;
 	}
-
-	public String getJsonStringResult() {
-		return jsonStringResult;
-	}
-
-	public void setJsonStringResult(String jsonStringResult) {
-		this.jsonStringResult = jsonStringResult;
-	}
-
 }
