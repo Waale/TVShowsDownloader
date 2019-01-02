@@ -57,7 +57,7 @@ public abstract class APIAction extends ActionSupport {
     }
 
     protected String returnError(Exception e) {
-        addActionError(e.getMessage());
+        addActionError(e.getClass() + " : " + e.getMessage());
 
         String errorCode = errorMap.get(e.getClass());
 

@@ -9,7 +9,7 @@ public class DownloadShowEpisodesAction extends APIAction {
 	@Override
 	public String execute() {
 		try {
-			new DownloadService().downloadShow(name);
+			new DownloadService().downloadShowEpisodes(name);
 		} catch (Exception e) {
 			return returnError(e);
 		}

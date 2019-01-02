@@ -3,22 +3,19 @@ package tvshowsdownloader.services;
 import tvshowsdownloader.beans.Episode;
 import tvshowsdownloader.beans.Show;
 import tvtimeapi.beans.TVTimeEpisode;
-import tvtimeapi.beans.TVTimeSeason;
 import tvtimeapi.beans.TVTimeShow;
-import tvtimeapi.beans.TVTimeWatchlist;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Romain on 22/12/2018.
  */
 public class TVTimeService {
-    public static List<Show> parseWatchlist(TVTimeWatchlist watchlist) throws Exception {
+    public static List<Show> parseShows(List<TVTimeShow> tvTimeShows) throws Exception {
         List<Show> shows = new ArrayList<>();
 
-        for (TVTimeShow tvTimeShow : watchlist) {
+        for (TVTimeShow tvTimeShow : tvTimeShows) {
             shows.add(parseShow(tvTimeShow));
         }
 
@@ -27,16 +24,28 @@ public class TVTimeService {
 
     public static Show parseShow(TVTimeShow tvTimeShow) {
         Show show = new Show();
+        show.setId(tvTimeShow.getId());
         show.setName(tvTimeShow.getName());
+        show.setOverview(tvTimeShow.getOverview());
         show.setBanner(tvTimeShow.getBanner());
+        show.setPoster(tvTimeShow.getPoster());
+        show.setAiredEpisodes(tvTimeShow.getAiredEpisodes());
+        show.setSeenEpisodes(tvTimeShow.getSeenEpisodes());
 
-        List<Episode> episodes = new ArrayList<>();
-        for (Map.Entry<Integer, TVTimeSeason> seasonEntry : tvTimeShow.getSeasons().entrySet()) {
-            for (Map.Entry<Integer, TVTimeEpisode> episodeEntry : seasonEntry.getValue().getEpisodes().entrySet()) {
-                episodes.add(new Episode(seasonEntry.getKey(), episodeEntry.getKey(), episodeEntry.getValue().getTitle()));
+        if (tvTimeShow.getEpisodes() != null) {
+            List<Episode> episodes = new ArrayList<>();
+            for (TVTimeEpisode episode : tvTimeShow.getEpisodes()) {
+                episodes.add(new Episode(episode.getSeason(), episode.getNumber(), episode.getName()));
+            }
+            show.setEpisodes(episodes);
+
+            TVTimeEpisode nextEpisode = tvTimeShow.getNextEpisode();
+            if (nextEpisode != null) {
+                show.setNextEpisode(new Episode(nextEpisode.getSeason(), nextEpisode.getNumber(), nextEpisode.getName()));
+            } else if (!episodes.isEmpty()) {
+                show.setNextEpisode(episodes.get(0));
             }
         }
-        show.setEpisodes(episodes);
 
         return show;
     }

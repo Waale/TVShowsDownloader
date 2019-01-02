@@ -8,8 +8,8 @@
 	<constant name="struts.devMode" value="true" />
 
 	<package name="tvshows-downloader" namespace="/" extends="struts-default">
-		<action name="home" class="tvshowsdownloader.actions.HomeAction">
-			<result name="success">home.jsp</result>
+		<action name="" class="tvshowsdownloader.actions.HomeAction">
+			<result name="success">home.html</result>
 		</action>
 	</package>
 
@@ -50,15 +50,18 @@
 			</result>
 		</global-results>
 
-		<action name="get-all-episodes" class="tvshowsdownloader.actions.GetAllEpisodesAction">
+		<action name="get-shows" class="tvshowsdownloader.actions.GetShowsAction">
 			<param name="root">shows</param>
 		</action>
 		<action name="get-show-episodes" class="tvshowsdownloader.actions.GetShowEpisodesAction">
 			<param name="root">show</param>
 		</action>
-		<action name="download-all-episodes" class="tvshowsdownloader.actions.DownloadAllEpisodesAction" />
-		<action name="download-show-episodes" class="tvshowsdownloader.actions.DownloadShowEpisodesAction" />
+		<action name="get-all-episodes" class="tvshowsdownloader.actions.GetAllEpisodesAction">
+			<param name="root">shows</param>
+		</action>
 		<action name="download-episodes" class="tvshowsdownloader.actions.DownloadEpisodesAction" />
+		<action name="download-show-episodes" class="tvshowsdownloader.actions.DownloadShowEpisodesAction" />
+		<action name="download-all-episodes" class="tvshowsdownloader.actions.DownloadAllEpisodesAction" />
 
 	</package>
 </struts>
