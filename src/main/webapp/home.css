@@ -2,23 +2,45 @@ body {
     background-color: lightgray;
 }
 
+.color1 {
+    color: #feb236;
+}
+
+.color2 {
+    color: #ff7b25;
+}
+
+.color3 {
+    color: #d64161;
+}
+
+.color4 {
+    color: #6b5b95;
+}
+
 .loading {
     background: url("assets/loading.gif") center center no-repeat;
 }
 
-#tvshows {
-    padding: 0px 0px;
-    text-align: center;
-    min-height: 100vh;
-    vertical-align: middle;
+#tvshows-container {
+    width: 100%;
 }
 
-#tvshows-accordion {
-    text-align: center;
+#tvshows {
+    float: left;
+    padding: 0px;
+    min-height: 100vh;
+    vertical-align: middle;
+    width: 758px;
+}
+
+#tvshow-details {
+    padding: 0px;
+    float: left;
 }
 
 .tvshow {
-    width: 758px;
+    max-width: 758px;
     margin: auto;
     border: none;
     border-radius: 0;
@@ -37,14 +59,22 @@ body {
 }
 
 .banner img {
-    max-width: 100%;
+    width: 100%;
+    height: 140px;
+}
+
+.enabled i {
+    cursor: pointer;
+}
+
+.disabled i {
+    color: gray;
+    cursor: default;
 }
 
 .banner i {
     position: absolute;
-    cursor: pointer;
     top: 80px;
-    color: dodgerblue;
     text-shadow: 2px 0 1px #000, -2px 0 1px #000, 0 2px 1px #000, 0 -2px 1px #000, 1px 1px 1px #000, -1px -1px 1px #000, 1px -1px 1px #000, -1px 1px 1px #000;
 }
 
@@ -54,21 +84,13 @@ body {
 }
 
 .banner .fa-download {
-    right: 85px;
+    right: 95px;
     font-size: 260%;
 }
 
-.banner .fa-angle-down {
+.banner .fa-search {
     right: 30px;
-    font-size: 315%;
-    transition: transform .3s ease-in-out;
-}
-
-.banner .fa-angle-down.rotated {
-    transform: rotate(180deg);
-}
-
-.tvshow .collapse {
+    font-size: 260%;
 }
 
 .card-body {
@@ -91,9 +113,11 @@ body {
     vertical-align: middle;
 }
 
+.card-body table th {
+    border: none;
+}
+
 .card-body i {
-    cursor: pointer;
-    color: dodgerblue;
     text-shadow: 1px 0 1px #000, -1px 0 1px #000, 0 1px 1px #000, 0 -1px 1px #000, 1px 1px 1px #000, -1px -1px 1px #000, 1px -1px 1px #000, -1px 1px 1px #000;
 }
 
