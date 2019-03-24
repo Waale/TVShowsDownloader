@@ -7,12 +7,15 @@ public class Episode {
 
 	private String name;
 
+	private Boolean watched;
+
 	public Episode() {}
 
-	public Episode(Integer season, Integer number, String name) {
+	public Episode(Integer season, Integer number, String name, Boolean watched) {
 		this.season = season;
 		this.number = number;
 		this.name = name;
+		this.watched = watched;
 	}
 
 	public Integer getSeason() {
@@ -37,6 +40,14 @@ public class Episode {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public Boolean getWatched() {
+		return watched;
+	}
+
+	public void setWatched(Boolean watched) {
+		this.watched = watched;
 	}
 
 	public String getNumberAsString() {

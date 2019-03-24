@@ -35,13 +35,13 @@ public class TVTimeService {
         if (tvTimeShow.getEpisodes() != null) {
             List<Episode> episodes = new ArrayList<>();
             for (TVTimeEpisode episode : tvTimeShow.getEpisodes()) {
-                episodes.add(new Episode(episode.getSeason(), episode.getNumber(), episode.getName()));
+                episodes.add(new Episode(episode.getSeason(), episode.getNumber(), episode.getName(), episode.getWatched()));
             }
             show.setEpisodes(episodes);
 
             TVTimeEpisode nextEpisode = tvTimeShow.getNextEpisode();
             if (nextEpisode != null) {
-                show.setNextEpisode(new Episode(nextEpisode.getSeason(), nextEpisode.getNumber(), nextEpisode.getName()));
+                show.setNextEpisode(new Episode(nextEpisode.getSeason(), nextEpisode.getNumber(), nextEpisode.getName(), nextEpisode.getWatched()));
             } else if (!episodes.isEmpty()) {
                 show.setNextEpisode(episodes.get(0));
             }

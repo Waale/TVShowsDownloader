@@ -1,15 +1,18 @@
 package tvshowsdownloader.actions;
 
+import tvshowsdownloader.exceptions.DownloadException;
 import tvshowsdownloader.services.DownloadService;
 
 public class DownloadShowEpisodesAction extends APIAction {
 
-	private String name;
+	private Integer id;
 
 	@Override
 	public String execute() {
 		try {
-			new DownloadService().downloadShowEpisodes(name);
+			new DownloadService().downloadShowEpisodes(id);
+		} catch (DownloadException e) {
+			return returnDownloadErrors(e.getMessages());
 		} catch (Exception e) {
 			return returnError(e);
 		}
@@ -17,11 +20,11 @@ public class DownloadShowEpisodesAction extends APIAction {
 		return SUCCESS;
 	}
 
-	public String getName() {
-		return name;
+	public Integer getId() {
+		return id;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 }

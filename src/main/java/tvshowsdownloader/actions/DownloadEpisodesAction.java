@@ -1,6 +1,7 @@
 package tvshowsdownloader.actions;
 
 import tvshowsdownloader.beans.Show;
+import tvshowsdownloader.exceptions.DownloadException;
 import tvshowsdownloader.services.DownloadService;
 
 import java.util.List;
@@ -13,6 +14,8 @@ public class DownloadEpisodesAction extends APIAction {
 	public String execute() {
 		try {
 			new DownloadService().downloadEpisodes(shows);
+		} catch (DownloadException e) {
+			return returnDownloadErrors(e.getMessages());
 		} catch (Exception e) {
 			return returnError(e);
 		}

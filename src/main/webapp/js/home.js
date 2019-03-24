@@ -1,59 +1,9 @@
 /**
  * Created by Romain on 28/12/2018.
  */
+
 import {html, render} from 'https://unpkg.com/lit-html?module'
-
-const showsTemplate = (tvshows) => html`
-    ${tvshows.map((tvshow) => html`
-        <div class="card tvshow">
-            <div class="card-header" id="show-${tvshow.id}" class="btn btn-link collapsed">
-                <table>
-                    <tr>
-                        <td class="banner">
-                            <img src="${tvshow.banner}" title="${tvshow.name} (${tvshow.id})"/>
-                            <span class="enabled"><i class="fas fa-download color1" title="Download"></i></span>
-                            <span class="enabled"><i class="fas fa-search color1" title="Search"></i></span>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-        </div><br/>
-    `)}
-`;
-
-const loadingEpisodesTemplate = html`
-    <div class="card-body">
-        <div>
-            <img src="../assets/loading.gif"/>
-        </div>
-    </div>
-`;
-
-const episodesTemplate = (show) => html`
-	<div class="card-body">
-	    <div>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Number</th>
-                        <th>Name</th>
-                    </tr>
-                </thead>
-                <tbody>
-                
-                    ${show.episodes.map((episode) => html`
-                        <tr id="${show.id}${episode.numberAsString}">
-                            <td>${episode.numberAsString}</td>
-                            <td>${episode.name}</td>
-                            <td class="enabled"><i class="fas fa-download color2" title="Download"></i></td>
-                            <td class="enabled"><i class="fas fa-search color2" title="Search on ThePirateBay"></i></td>
-                        </tr>
-                    `)}
-                </tbody>
-            </table>
-        </div>
-	</div>
-`;
+import * as templates from './templates.js'
 
 function loadShows() {
     $.ajax({
@@ -61,10 +11,13 @@ function loadShows() {
         type: "GET",
         async: true,
         success: function (res) {
-            $("#tvshows-container").removeClass("loading");
-            render(showsTemplate(res.shows), document.getElementById("tvshows"));
+            $("#tvshows").removeClass("loading");
+            render(templates.showsTemplate(res.shows), document.getElementById("tvshows"));
             res.shows.forEach(function(show) {
-                $("#show-" + show.id).click(function() {
+                $("#show-" + show.id + " .fa-download").click(function() {
+                    downloadShowEpisodes(show);
+                });
+                $("#show-" + show.id + " .fa-search").click(function() {
                     loadShowEpisodes(show);
                 });
             })
@@ -72,9 +25,31 @@ function loadShows() {
     });
 }
 
+function downloadShowEpisodes(show) {
+    disableClicks();
+
+    $.ajax({
+        url: "api/download-show-episodes",
+        data: JSON.stringify({"id": show.id}),
+        dataType: "json",
+        contentType: "application/json",
+        type: "POST",
+        async: true,
+        success: function (res) {
+            notifySuccess(show.name, "Download started");
+            enableClicks();
+        },
+        error: function (res) {
+            notifyError(show.name, res.responseJSON.actionErrors.join(", "));
+            enableClicks();
+        }
+    });
+}
+
 function loadShowEpisodes(show) {
     disableClicks();
-    render(loadingEpisodesTemplate, document.getElementById("tvshow-details"));
+    $("#tvshow-details").addClass("loading");
+    render("", document.getElementById("tvshow-details"));
 
     $.ajax({
         url: "api/get-show-episodes",
@@ -85,7 +60,8 @@ function loadShowEpisodes(show) {
         async: true,
         success: function (res) {
             enableClicks();
-        	render(episodesTemplate(res.show), document.getElementById("tvshow-details"));
+            $("#tvshow-details").removeClass("loading");
+        	render(templates.episodesTemplate(res.show), document.getElementById("tvshow-details"));
         	res.show.episodes.forEach(function(episode) {
         	   $("#"+ show.id + episode.numberAsString + " .enabled .fa-download").click(function() {
         	       downloadEpisode(show, episode);
@@ -110,7 +86,7 @@ function downloadEpisode(show, episode) {
             enableClicks();
         },
         error: function (res) {
-            notifyError(show.name + " " + episode.numberAsString + " : " + episode.name, res.responseJSON.actionErrors[0]);
+            notifyError(show.name + " " + episode.numberAsString + " : " + episode.name, res.responseJSON.join(", "));
             enableClicks();
         }
     })
@@ -129,6 +105,6 @@ function disableClicks() {
 }
 
 $(document).ready(function() {
-    $("#tvshows-container").addClass("loading");
+    $("#tvshows").addClass("loading");
 	loadShows();
 });

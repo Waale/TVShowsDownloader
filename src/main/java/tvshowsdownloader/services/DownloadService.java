@@ -5,6 +5,7 @@ import thepiratebayapi.beans.TPBayTorrent;
 import thepiratebayapi.services.TPBayAPI;
 import tvshowsdownloader.beans.Episode;
 import tvshowsdownloader.beans.Show;
+import tvshowsdownloader.exceptions.DownloadException;
 import tvtimeapi.beans.TVTimeShow;
 import tvtimeapi.services.TVTimeAPI;
 
@@ -46,8 +47,8 @@ public class DownloadService {
             Show show = showEntry.getValue();
 
             Set<String> episodes = new HashSet<>();
-            episodes.addAll(getEpisodesAsString(library.get(name)));
-            episodes.addAll(getEpisodesAsString(downloads.get(name)));
+            episodes.addAll(getUnwatchedEpisodesAsString(library.get(name)));
+            episodes.addAll(getUnwatchedEpisodesAsString(downloads.get(name)));
 
             if ((show.getAiredEpisodes() - show.getSeenEpisodes()) > episodes.size()) {
                 show.setDownloadedEpisodes(episodes.size());
@@ -63,8 +64,8 @@ public class DownloadService {
         parameters.put("limit", "10000");
 
         List<Show> watchlist = TVTimeService.parseShows(tvTimeAPI.getDetailedWatchlist(parameters));
-        List<String> library = getEpisodesAsString(libraryService.getShows());
-        List<String> downloads = getEpisodesAsString(downloaderService.getShows());
+        List<String> library = getUnwatchedEpisodesAsString(libraryService.getShows());
+        List<String> downloads = getUnwatchedEpisodesAsString(downloaderService.getShows());
 
         watchlist.stream().forEach(s -> s.setEpisodes(getUnownedEpisodes(s, library, downloads)));
 
@@ -82,34 +83,13 @@ public class DownloadService {
     private Show getShowEpisodes(TVTimeShow tvTimeShow) throws Exception {
         Show show = TVTimeService.parseShow(tvTimeShow);
 
-        List<String> library = getEpisodesAsString(libraryService.getShows());
-        List<String> downloads = getEpisodesAsString(downloaderService.getShows());
+        List<String> library = getUnwatchedEpisodesAsString(libraryService.getShows());
+        List<String> downloads = getUnwatchedEpisodesAsString(downloaderService.getShows());
 
         List<Episode> episodes = getUnownedEpisodes(show, library, downloads);
         show.setEpisodes(episodes);
 
         return show;
-    }
-
-    private List<String> getEpisodesAsString(List<Show> shows) {
-        if (shows == null) {
-            return new ArrayList<>();
-        } else {
-            return shows.stream()
-                .flatMap(s -> s.getEpisodes().stream()
-                        .map(e -> s.getName() + " " + e.getNumberAsString()))
-                .collect(Collectors.toList());
-        }
-    }
-
-    private List<String> getEpisodesAsString(Show show) {
-        if (show == null || show.getEpisodes() == null) {
-            return new ArrayList<>();
-        } else {
-            return show.getEpisodes().stream()
-                    .map(e -> show.getName() + " " + e.getNumberAsString())
-                    .collect(Collectors.toList());
-        }
     }
 
     private List<Episode> getUnownedEpisodes(Show show, List<String> library, List<String> downloads) {
@@ -125,36 +105,85 @@ public class DownloadService {
         }
     }
 
+    private List<String> getUnwatchedEpisodesAsString(List<Show> shows) {
+        if (shows == null) {
+            return new ArrayList<>();
+        } else {
+            return shows.stream()
+                    .flatMap(s -> s.getEpisodes().stream()
+                            .filter(e -> !e.getWatched())
+                            .map(e -> s.getName() + " " + e.getNumberAsString()))
+                    .collect(Collectors.toList());
+        }
+    }
+
+    private List<String> getUnwatchedEpisodesAsString(Show show) {
+        if (show == null || show.getEpisodes() == null) {
+            return new ArrayList<>();
+        } else {
+            return show.getEpisodes().stream()
+                    .filter(e -> !e.getWatched())
+                    .map(e -> show.getName() + " " + e.getNumberAsString())
+                    .collect(Collectors.toList());
+        }
+    }
+
     public void downloadAllEpisodes() throws Exception {
         downloadEpisodes(getAllEpisodes());
     }
 
-    public void downloadShowEpisodes(String name) throws Exception {
-        downloadEpisodes(getShowEpisodes(name));
+    public void downloadShowEpisodes(Integer id) throws Exception {
+        downloadEpisodes(getShowEpisodes(id));
     }
 
     public void downloadEpisodes(List<Show> shows) throws Exception {
+        List<String> messages = new ArrayList<>();
+
         for (Show show : shows) {
-            downloadEpisodes(show);
+            try {
+                downloadEpisodes(show);
+            } catch (DownloadException e) {
+                messages.addAll(e.getMessages());
+            } catch (Exception e) {
+                messages.add(e.getMessage());
+            }
+        }
+
+        if (!messages.isEmpty()) {
+            throw new DownloadException(messages);
         }
     }
 
     public void downloadEpisodes(Show show) throws Exception {
-        String destinationPath = propertiesService.getProperty("destination.path");
+        List<String> messages = new ArrayList<>();
 
+        for (Episode episode : show.getEpisodes()) {
+            try {
+                downloadEpisode(show, episode);
+            } catch (Exception e) {
+                messages.add(e.getMessage());
+            }
+        }
+
+        if (!messages.isEmpty()) {
+            throw new DownloadException(messages);
+        }
+    }
+
+    private void downloadEpisode(Show show, Episode episode) throws Exception {
         if (tpBayAPI == null) {
             tpBayAPI = new TPBayAPI(propertiesService.getProperty("tpbay.url"));
         }
 
-        for (Episode episode : show.getEpisodes()) {
-            String name = show.getName() + " " + episode.getNumberAsString();
-            TPBaySearchResults tpBaySearchResults = tpBayAPI.searchTorrents(name, null);
-            if (!tpBaySearchResults.isEmpty()) {
-                TPBayTorrent torrent = tpBayAPI.getTorrent(tpBaySearchResults.get(0).getUrl());
-                downloaderService.addTorrent(torrent.getMagnet(), destinationPath + "/" + show.getName(), name);
-            } else {
-                throw new Exception("No torrent found for search : " + name);
-            }
+        String name = show.getName() + " " + episode.getNumberAsString();
+
+        TPBaySearchResults tpBaySearchResults = tpBayAPI.searchTorrents(name, null);
+        if (!tpBaySearchResults.isEmpty()) {
+            TPBayTorrent torrent = tpBayAPI.getTorrent(tpBaySearchResults.get(0).getUrl());
+            String destination = propertiesService.getProperty("destination.path") + "/" + show.getName();
+            downloaderService.addTorrent(torrent.getMagnet(), destination, name);
+        } else {
+            throw new Exception("No torrent found for search : " + name);
         }
     }
 }

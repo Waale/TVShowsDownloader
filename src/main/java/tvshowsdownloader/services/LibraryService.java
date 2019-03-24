@@ -67,7 +67,7 @@ class LibraryService {
 			List<Episode> episodes = new ArrayList<>();
 			for (Map.Entry<Integer, KodiSeason> seasonEntry : kodiShow.getSeasons().entrySet()) {
 				for (Map.Entry<Integer, KodiEpisode> episodeEntry : seasonEntry.getValue().getEpisodes().entrySet()) {
-					episodes.add(new Episode(seasonEntry.getKey(), episodeEntry.getKey(), episodeEntry.getValue().getTitle()));
+					episodes.add(new Episode(seasonEntry.getKey(), episodeEntry.getKey(), episodeEntry.getValue().getTitle(), episodeEntry.getValue().isWatched()));
 				}
 			}
 			show.setEpisodes(episodes);
@@ -88,7 +88,7 @@ class LibraryService {
 			List<Episode> episodes = new ArrayList<>();
 			for (Map.Entry<Integer, PlexSeason> seasonEntry : plexShow.getSeasons().entrySet()) {
 				for (Map.Entry<Integer, PlexEpisode> episodeEntry : seasonEntry.getValue().getEpisodes().entrySet()) {
-					episodes.add(new Episode(seasonEntry.getKey(), episodeEntry.getKey(), episodeEntry.getValue().getTitle()));
+					episodes.add(new Episode(seasonEntry.getKey(), episodeEntry.getKey(), episodeEntry.getValue().getTitle(), episodeEntry.getValue().isWatched()));
 				}
 			}
 			show.setEpisodes(episodes);

@@ -16,6 +16,7 @@ import tvtimeapi.exceptions.TVTimeURLException;
 
 import java.io.FileNotFoundException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -66,5 +67,13 @@ public abstract class APIAction extends ActionSupport {
         }
 
         return errorCode;
+    }
+
+    protected String returnDownloadErrors(List<String> messages) {
+        for (String message : messages) {
+            addActionError(message);
+        }
+
+        return ERROR;
     }
 }

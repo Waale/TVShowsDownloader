@@ -1,5 +1,4 @@
 body {
-    background-color: lightgray;
 }
 
 .color1 {
@@ -19,24 +18,28 @@ body {
 }
 
 .loading {
-    background: url("assets/loading.gif") center center no-repeat;
+    background-image: url("assets/loading.gif");
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 #tvshows-container {
     width: 100%;
+    min-height: 100vh;
 }
 
-#tvshows {
-    float: left;
+#tvshows, #tvshow-details {
+    vertical-align: top;
     padding: 0px;
     min-height: 100vh;
-    vertical-align: middle;
-    width: 758px;
+    height: 100%;
+    min-width: 490px;
+    width: 50%;
+    text-align: center;
 }
 
 #tvshow-details {
-    padding: 0px;
-    float: left;
+    background-color: #c8c8c8;
 }
 
 .tvshow {
@@ -60,7 +63,9 @@ body {
 
 .banner img {
     width: 100%;
-    height: 140px;
+    max-height: 140px;
+    min-width: 490px;
+    min-height: 90px;
 }
 
 .enabled i {
@@ -74,7 +79,7 @@ body {
 
 .banner i {
     position: absolute;
-    top: 80px;
+    bottom: 10px;
     text-shadow: 2px 0 1px #000, -2px 0 1px #000, 0 2px 1px #000, 0 -2px 1px #000, 1px 1px 1px #000, -1px -1px 1px #000, 1px -1px 1px #000, -1px 1px 1px #000;
 }
 
@@ -84,44 +89,35 @@ body {
 }
 
 .banner .fa-download {
-    right: 95px;
+    right: 80px;
     font-size: 260%;
 }
 
 .banner .fa-search {
-    right: 30px;
+    right: 15px;
     font-size: 260%;
 }
 
-.card-body {
-    display: flex;
+.episode {
     padding: 0;
-}
-
-.card-body div {
-    flex-grow: 1;
-    width: 0;
     margin: 0;
 }
 
-.card-body table {
-    margin: 0;
-}
-
-.card-body table td {
+.episode td {
     padding: 6px 12px;
-    vertical-align: middle;
+    vertical-align: middle !important;
 }
 
-.card-body table th {
-    border: none;
+.episode th {
+    border: none !important;
 }
 
-.card-body i {
+.episode i {
+    font-size: 130%;
     text-shadow: 1px 0 1px #000, -1px 0 1px #000, 0 1px 1px #000, 0 -1px 1px #000, 1px 1px 1px #000, -1px -1px 1px #000, 1px -1px 1px #000, -1px 1px 1px #000;
 }
 
-.card-body i:hover {
+.episode i:hover {
     text-shadow: 1px 0 1px #fff, -1px 0 1px #fff, 0 1px 1px #fff, 0 -1px 1px #fff, 1px 1px 1px #fff, -1px -1px 1px #fff, 1px -1px 1px #fff, -1px 1px 1px #fff;
     filter: brightness(85%);
 }
